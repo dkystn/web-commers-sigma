@@ -1,0 +1,170 @@
+:root {
+    --zalora-primary: #24a2dc;
+    --zalora-secondary: #000000;
+    --zalora-light: #f8f9fa;
+    --zalora-dark: #212529;
+    --zalora-border: #dee2e6;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--zalora-primary) !important;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    color: var(--zalora-secondary) !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--zalora-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--zalora-primary);
+    border-color: var(--zalora-primary);
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #f4a53b;
+    border-color: #f4a53b;
+}
+
+.btn-outline-primary {
+    color: var(--zalora-primary);
+    border-color: var(--zalora-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--zalora-primary);
+    border-color: var(--zalora-primary);
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #f4a53b 0%, #f4a53b 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.category-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--zalora-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+.price-original {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.price-sale {
+    color: var(--zalora-primary);
+    font-weight: 600;
+}
+
+.discount-badge {
+    background-color: var(--zalora-primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.top-bar {
+    background-color: var(--zalora-secondary);
+    color: white;
+    font-size: 0.875rem;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-input {
+    border-radius: 25px;
+    padding-left: 2.5rem;
+    border: 2px solid #e9ecef;
+}
+
+.search-input:focus {
+    border-color: var(--zalora-primary);
+    box-shadow: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.footer {
+    background-color: var(--zalora-secondary);
+    color: white;
+}
+
+.social-icons a {
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: var(--zalora-primary);
+}
+
+.carousel-item img {
+    height: 500px;
+    object-fit: cover;
+}
+
+.bg-purple {
+    background-color: #f4a53b !important;
+}
+
+.bg-blue {
+    background-color: #3498db !important;
+}
+
+@media (max-width: 768px) {
+    .carousel-item img {
+        height: 300px;
+    }
+
+    .hero-section {
+        padding: 50px 0;
+    }
+}

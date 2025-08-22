@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Commers Sigma Style E-commerce')</title>
+    <title>@yield('title', 'Sigma - Susu Kambing Kesehatan Terpercaya')</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('custom/img/logo-sigma.png') }}?{{ filemtime(public_path('custom/img/logo-sigma.png')) }}">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,179 +19,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <style>
-        :root {
-            --zalora-primary: #24a2dc;
-            --zalora-secondary: #000000;
-            --zalora-light: #f8f9fa;
-            --zalora-dark: #212529;
-            --zalora-border: #dee2e6;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: var(--zalora-primary) !important;
-        }
-
-        .navbar-nav .nav-link {
-            font-weight: 500;
-            color: var(--zalora-secondary) !important;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: var(--zalora-primary) !important;
-        }
-
-        .btn-primary {
-            background-color: var(--zalora-primary);
-            border-color: var(--zalora-primary);
-            font-weight: 500;
-        }
-
-        .btn-primary:hover {
-            background-color: #f4a53b;
-            border-color: #f4a53b;
-        }
-
-        .btn-outline-primary {
-            color: var(--zalora-primary);
-            border-color: var(--zalora-primary);
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--zalora-primary);
-            border-color: var(--zalora-primary);
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, #f4a53b 0%, #f4a53b 100%);
-            color: white;
-            padding: 80px 0;
-        }
-
-        .category-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid var(--zalora-border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .product-card img {
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .price-original {
-            text-decoration: line-through;
-            color: #6c757d;
-        }
-
-        .price-sale {
-            color: var(--zalora-primary);
-            font-weight: 600;
-        }
-
-        .discount-badge {
-            background-color: var(--zalora-primary);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .top-bar {
-            background-color: var(--zalora-secondary);
-            color: white;
-            font-size: 0.875rem;
-        }
-
-        .search-container {
-            position: relative;
-        }
-
-        .search-input {
-            border-radius: 25px;
-            padding-left: 2.5rem;
-            border: 2px solid #e9ecef;
-        }
-
-        .search-input:focus {
-            border-color: var(--zalora-primary);
-            box-shadow: none;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-
-        .footer {
-            background-color: var(--zalora-secondary);
-            color: white;
-        }
-
-        .social-icons a {
-            color: white;
-            transition: color 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            color: var(--zalora-primary);
-        }
-
-        .carousel-item img {
-            height: 500px;
-            object-fit: cover;
-        }
-
-        .bg-purple {
-            background-color: #f4a53b !important;
-        }
-
-        .bg-blue {
-            background-color: #3498db !important;
-        }
-
-        @media (max-width: 768px) {
-            .carousel-item img {
-                height: 300px;
-            }
-
-            .hero-section {
-                padding: 50px 0;
-            }
-        }
-    </style>
+    {{-- Custom Styles --}}
+    <link rel="stylesheet" href="{{ asset('custom/style/style.css') }}?{{ filemtime(public_path('custom/style/style.css')) }}">
 
     @stack('styles')
 </head>
@@ -216,7 +45,10 @@
     <!-- Main Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') ?? '/' }}">Commers Sigma</a>
+            <a class="navbar-brand d-flex align-items-center" href="{{ route('home') ?? '/' }}">
+                <img src="{{ asset('custom/img/logo-text-sigma.png') }}" alt="Sigma Logo" height="40" class="me-2">
+                {{-- <span class="fw-bold">SIGMA</span> --}}
+            </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -225,32 +57,32 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', 'wanita') }}">WANITA</a>
+                        <a class="nav-link" href="{{ route('category', 'etawalin') }}">ETAWALIN</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', 'pria') }}">PRIA</a>
+                        <a class="nav-link" href="{{ route('category', 'etawaku') }}">ETAWAKU</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', 'anak') }}">ANAK</a>
+                        <a class="nav-link" href="{{ route('category', 'susu-kambing') }}">SUSU KAMBING</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', 'sepatu') }}">SEPATU</a>
+                        <a class="nav-link" href="{{ route('category', 'suplemen') }}">SUPLEMEN</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', 'tas') }}">TAS</a>
+                        <a class="nav-link" href="{{ route('category', 'vitamin') }}">VITAMIN</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', 'beauty') }}">BEAUTY</a>
+                        <a class="nav-link" href="{{ route('category', 'herbal') }}">HERBAL</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger fw-bold" href="{{ route('category', 'sale') }}">SALE</a>
+                        <a class="nav-link text-danger fw-bold" href="{{ route('category', 'promo') }}">PROMO</a>
                     </li>
                 </ul>
 
                 <!-- Search Bar -->
                 <div class="search-container me-3">
                     <i class="bi bi-search search-icon"></i>
-                    <input type="text" class="form-control search-input" placeholder="Cari produk, brand, atau kategori">
+                    <input type="text" class="form-control search-input" placeholder="Cari produk kesehatan, susu kambing...">
                 </div>
 
                 <!-- User Actions -->
@@ -289,24 +121,24 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <h5 class="text-uppercase fw-bold mb-3">Tentang Commers Sigma</h5>
+                    <h5 class="text-uppercase fw-bold mb-3">Tentang Sigma</h5>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white-50 text-decoration-none">Tentang Kami</a></li>
                         <li><a href="#" class="text-white-50 text-decoration-none">Karir</a></li>
                         <li><a href="#" class="text-white-50 text-decoration-none">Kebijakan Privasi</a></li>
                         <li><a href="#" class="text-white-50 text-decoration-none">Syarat & Ketentuan</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Blog</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Blog Kesehatan</a></li>
                     </ul>
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <h5 class="text-uppercase fw-bold mb-3">Jelajahi</h5>
+                    <h5 class="text-uppercase fw-bold mb-3">Produk Kami</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50 text-decoration-none">Fashion Wanita</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Fashion Pria</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Sepatu</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Tas</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Beauty</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Etawalin</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Etawaku</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Susu Kambing</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Suplemen</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Vitamin & Herbal</a></li>
                     </ul>
                 </div>
 
@@ -319,13 +151,10 @@
                         <a href="#" class="me-3"><i class="bi bi-youtube fs-4"></i></a>
                     </div>
 
-                    <h6 class="fw-bold mb-2">Download App</h6>
+                    <h6 class="fw-bold mb-2">PT SIGMA DIGITAL NUSANTARA</h6>
                     <div class="d-flex flex-column">
                         <a href="#" class="mb-2">
-                            <img src="https://logoeps.com/wp-content/uploads/2013/03/google-play-vector-logo.png" alt="Google Play" class="img-fluid bg-white rounded p-1" style="max-width: 150px; height: 45px; object-fit: contain;">
-                        </a>
-                        <a href="#">
-                            <img src="https://logoeps.com/wp-content/uploads/2013/03/app-store-vector-logo.png" alt="App Store" class="img-fluid bg-white rounded p-1" style="max-width: 150px; height: 45px; object-fit: contain;">
+                            <img src="{{ asset('custom/img/logo-text-sigma.png') }}?{{ filemtime(public_path('custom/img/logo-text-sigma.png')) }}" alt="Google Play" class="img-fluid bg-white rounded p-1" style="max-width: 150px; height: 45px; object-fit: contain;">
                         </a>
                     </div>
                 </div>
@@ -335,13 +164,13 @@
 
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="mb-0 text-white-50">&copy; 2025 Commers Sigma Style. All rights reserved.</p>
+                    <p class="mb-0 text-white-50">&copy; 2025 Sigma. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <img src="https://logoeps.com/wp-content/uploads/2013/03/visa-vector-logo.png" alt="Visa" class="me-2 bg-white rounded p-1" style="width: 50px; height: 30px; object-fit: contain;">
-                    <img src="https://logoeps.com/wp-content/uploads/2013/03/mastercard-vector-logo.png" alt="Mastercard" class="me-2 bg-white rounded p-1" style="width: 50px; height: 30px; object-fit: contain;">
-                    <span class="badge bg-purple me-2">OVO</span>
-                    <span class="badge bg-blue">DANA</span>
+                    <img src="{{ asset('custom/img/payments/visa.png') }}?{{ filemtime(public_path('custom/img/payments/visa.png')) }}" alt="Visa" class="me-2 bg-white rounded p-1" style="width:50px;height:30px;object-fit:contain;">
+                    <img src="{{ asset('custom/img/payments/mastercard.png') }}?{{ filemtime(public_path('custom/img/payments/mastercard.png')) }}" alt="Mastercard" class="me-2 bg-white rounded p-1" style="width:50px;height:30px;object-fit:contain;">
+                    <img src="{{ asset('custom/img/payments/ovo.png') }}?{{ filemtime(public_path('custom/img/payments/ovo.png')) }}" alt="OVO" class="me-2 bg-white rounded p-1" style="width:50px;height:30px;object-fit:contain;">
+                    <img src="{{ asset('custom/img/payments/dana.png') }}?{{ filemtime(public_path('custom/img/payments/dana.png')) }}" alt="DANA" class="bg-white rounded p-1" style="width:50px;height:30px;object-fit:contain;">
                 </div>
             </div>
         </div>
