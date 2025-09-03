@@ -179,6 +179,11 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Midtrans Snap.js -->
+    <script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{ env('MIDTRANS_CLIENT_KEY', 'SB-Mid-client-ydoeRccRG1sKnOeu') }}"></script>
+
     @stack('scripts')
 </body>
 </html>
