@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'biteship' => [
+        'api_key' => env('BITESHIP_API_KEY'),
+        'base_url' => env('BITESHIP_BASE_URL', 'https://api.biteship.com'),
+        'is_production' => env('BITESHIP_IS_PRODUCTION', false),
+    ],
+
 ];

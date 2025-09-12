@@ -143,7 +143,7 @@ class PaymentController extends Controller
             }
 
             // Create Snap token
-            $snapToken = \Midtrans\Snap::getSnapToken($transaction_data);
+            $snapToken = Snap::getSnapToken($transaction_data);
 
             // Log the transaction data for debugging
             Log::info('Midtrans Transaction Data:', $transaction_data);

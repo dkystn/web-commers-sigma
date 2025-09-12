@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\BiteshipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('orders')->group(function () {
     Route::post('/cod', [PaymentController::class, 'handleCOD']);
     Route::post('/midtrans', [PaymentController::class, 'handleMidtrans']);
+});
+
+// Biteship Routes
+Route::prefix('biteship')->group(function () {
+    Route::post('/instant-rates', [BiteshipController::class, 'getInstantRates']);
+    Route::get('/couriers', [BiteshipController::class, 'getCouriers']);
+    Route::get('/test', [BiteshipController::class, 'testConnection']);
 });

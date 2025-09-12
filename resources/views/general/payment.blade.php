@@ -98,16 +98,16 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="firstName" class="form-label">Nama Depan</label>
-                                        <input type="text" class="form-control" id="firstName" value="John" required>
+                                        <input type="text" class="form-control" id="firstName" value="Ahmad" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="lastName" class="form-label">Nama Belakang</label>
-                                        <input type="text" class="form-control" id="lastName" value="Doe" required>
+                                        <input type="text" class="form-control" id="lastName" value="Santoso" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" value="john.doe@example.com" required>
+                                    <input type="email" class="form-control" id="email" value="ahmad.santoso@email.com" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Nomor Telepon</label>
@@ -115,12 +115,13 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Alamat Lengkap</label>
-                                    <textarea class="form-control" id="address" rows="3" required>Jl. Sudirman No. 123, Jakarta Pusat</textarea>
+                                    <textarea class="form-control" id="address" rows="3" required>Jl. Banikan No.11E, Mejing Wetan, Ambarketawang, Kec. Gamping, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55294</textarea>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label for="province" class="form-label">Provinsi</label>
                                         <select class="form-select" id="province" required>
+                                            <option value="yogyakarta">Daerah Istimewa Yogyakarta</option>
                                             <option value="jakarta">DKI Jakarta</option>
                                             <option value="jabar">Jawa Barat</option>
                                             <option value="jateng">Jawa Tengah</option>
@@ -129,6 +130,8 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="city" class="form-label">Kota</label>
                                         <select class="form-select" id="city" required>
+                                            <option value="sleman">Kabupaten Sleman</option>
+                                            <option value="yogyakarta-kota">Kota Yogyakarta</option>
                                             <option value="jakarta-pusat">Jakarta Pusat</option>
                                             <option value="jakarta-utara">Jakarta Utara</option>
                                             <option value="jakarta-selatan">Jakarta Selatan</option>
@@ -136,7 +139,68 @@
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="postalCode" class="form-label">Kode Pos</label>
-                                        <input type="text" class="form-control" id="postalCode" value="10210" required>
+                                        <input type="text" class="form-control" id="postalCode" value="55294" required>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden coordinate fields -->
+                                <input type="hidden" id="latitude" value="-6.288941">
+                                <input type="hidden" id="longitude" value="106.806473">
+                                <!-- Hidden coordinates for Biteship API -->
+                                <input type="hidden" id="latitude" value="-7.7956">
+                                <input type="hidden" id="longitude" value="110.3695">
+                            </div>
+                        </div>
+
+                        <!-- Shipping Method -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-white">
+                                <h5 class="fw-bold mb-0">Metode Pengiriman</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Regular Shipping -->
+                                <div class="mb-3">
+                                    <div class="form-check shipping-method">
+                                        <input class="form-check-input" type="radio" name="shippingMethod" id="regular" value="regular" checked>
+                                        <label class="form-check-label d-flex align-items-center" for="regular">
+                                            <i class="bi bi-truck text-secondary me-3 fs-4"></i>
+                                            <div>
+                                                <div class="fw-bold">Pengiriman Reguler</div>
+                                                <small class="text-muted">2-5 hari kerja</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Instant Shipping -->
+                                <div class="mb-3">
+                                    <div class="form-check shipping-method">
+                                        <input class="form-check-input" type="radio" name="shippingMethod" id="instant" value="instant">
+                                        <label class="form-check-label d-flex align-items-center" for="instant">
+                                            <i class="bi bi-lightning-fill text-warning me-3 fs-4"></i>
+                                            <div>
+                                                <div class="fw-bold">Pengantaran Instan</div>
+                                                <small class="text-muted">1-2 jam (Biteship)</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Instant Shipping Options (shown when instant is selected) -->
+                                <div id="instantOptions" class="mt-3" style="display: none;">
+                                    <div class="border rounded p-3 bg-light">
+                                        <h6 class="fw-bold mb-3">Pilih Kurir Instan:</h6>
+                                        <div id="instantCouriers" class="row">
+                                            <!-- Couriers will be loaded here -->
+                                            <div class="col-12">
+                                                <div class="text-center">
+                                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    <small class="text-muted ms-2">Memuat kurir...</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -354,11 +418,49 @@
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">";
         }
+
+        .shipping-method {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .shipping-method:hover {
+            border-color: var(--bs-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .shipping-method .form-check-input:checked ~ .form-check-label {
+            color: var(--bs-primary);
+            font-weight: 500;
+        }
+
+        .shipping-sub-method {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .shipping-sub-method:hover {
+            border-color: var(--bs-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .shipping-sub-method .form-check-input:checked ~ .form-check-label {
+            color: var(--bs-primary);
+            font-weight: 500;
+        }
     </style>
 @endpush
 
 @push('scripts')
     <script>
+        // Initialize current total
+        window.currentTotal = 315000;
         // Payment method selection
         document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
             radio.addEventListener('change', function() {
@@ -412,6 +514,239 @@
 
         // Set initial active state
         document.querySelector('input[name="paymentMethod"]:checked').dispatchEvent(new Event('change'));
+
+        // Shipping method selection
+        document.querySelectorAll('input[name="shippingMethod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove active class from all shipping methods
+                document.querySelectorAll('.shipping-method').forEach(method => {
+                    method.classList.remove('border-primary', 'bg-light');
+                });
+
+                // Add active class to selected shipping method
+                if (this.checked) {
+                    this.closest('.shipping-method').classList.add('border-primary', 'bg-light');
+
+                    const instantOptions = document.getElementById('instantOptions');
+                    const instantCouriers = document.getElementById('instantCouriers');
+
+                    if (this.value === 'regular') {
+                        instantOptions.style.display = 'none';
+                        updateOrderSummary('regular', 0);
+                    } else if (this.value === 'instant') {
+                        instantOptions.style.display = 'block';
+                        loadInstantCouriers();
+                    }
+                }
+            });
+        });
+
+        // Load instant couriers from Biteship
+        function loadInstantCouriers() {
+            const instantCouriers = document.getElementById('instantCouriers');
+            instantCouriers.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <small class="text-muted ms-2">Memuat kurir instan...</small>
+                    </div>
+                </div>
+            `;
+
+            // Get coordinates from hidden fields
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+
+            if (!latitude || !longitude) {
+                instantCouriers.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Koordinat lokasi tidak tersedia
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Call Biteship API with simplified coordinate format
+            fetch('/api/biteship/instant-rates', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    latitude: parseFloat(latitude),
+                    longitude: parseFloat(longitude)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Biteship response:', data);
+
+                if (data.success && data.couriers && Array.isArray(data.couriers)) {
+                    displayInstantCouriers(data.couriers);
+                } else if (data.success && data.pricing && Array.isArray(data.pricing)) {
+                    // Handle direct pricing response
+                    displayInstantCouriers(data.pricing);
+                } else if (!data.success) {
+                    // Handle API error
+                    instantCouriers.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>Gagal mendapatkan data dari API Biteship</strong><br>
+                                ${data.message || 'Service temporarily unavailable'}<br>
+                                <small class="text-muted">Pastikan koneksi internet Anda stabil dan API key valid.</small>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    instantCouriers.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-warning">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Tidak dapat memuat opsi kurir instan - format response tidak valid
+                            </div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading instant couriers:', error);
+                instantCouriers.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Gagal memuat kurir instan. Silakan coba lagi.
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Display instant couriers
+        function displayInstantCouriers(couriers) {
+            const instantCouriers = document.getElementById('instantCouriers');
+            let html = '';
+
+            console.log('Displaying couriers:', couriers);
+
+            couriers.forEach((courier, index) => {
+                const courierId = `courier-${index}`;
+                let price = 0;
+                let duration = '1-2 jam';
+                let courierName = 'Kurir Instan';
+
+                // Handle Biteship API response structure
+                if (courier.price) {
+                    price = courier.price;
+                }
+
+                if (courier.duration) {
+                    duration = courier.duration;
+                }
+
+                if (courier.courier_name) {
+                    courierName = courier.courier_name;
+                } else if (courier.company) {
+                    courierName = courier.company.toUpperCase();
+                }
+
+                // Handle service name
+                let serviceName = 'Instant';
+                if (courier.courier_service_name) {
+                    serviceName = courier.courier_service_name;
+                }
+
+                if (price > 0) {
+                    html += `
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check shipping-sub-method">
+                                <input class="form-check-input" type="radio" name="instantCourier" id="${courierId}" value="${courierId}" data-price="${price}" data-courier="${JSON.stringify(courier).replace(/"/g, '&quot;')}">
+                                <label class="form-check-label d-flex align-items-center" for="${courierId}">
+                                    <i class="bi bi-truck text-warning me-3 fs-4"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold">${courierName} ${serviceName}</div>
+                                        <small class="text-muted">${duration}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-primary">Rp ${price.toLocaleString()}</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (html === '') {
+                instantCouriers.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Tidak ada kurir instan yang tersedia untuk alamat ini
+                        </div>
+                    </div>
+                `;
+            } else {
+                instantCouriers.innerHTML = html;
+
+                // Add event listeners for courier selection
+                document.querySelectorAll('input[name="instantCourier"]').forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        // Remove active class from all sub-methods
+                        document.querySelectorAll('.shipping-sub-method').forEach(method => {
+                            method.classList.remove('border-primary', 'bg-light');
+                        });
+
+                        // Add active class to selected sub-method
+                        if (this.checked) {
+                            this.closest('.shipping-sub-method').classList.add('border-primary', 'bg-light');
+                            const price = parseInt(this.getAttribute('data-price'));
+                            updateOrderSummary('instant', price);
+                        }
+                    });
+                });
+            }
+        }
+
+        // Update order summary with shipping cost
+        function updateOrderSummary(shippingType, shippingCost) {
+            const subtotal = 350000;
+            const discount = 35000;
+            const baseTotal = subtotal - discount;
+            const total = baseTotal + shippingCost;
+
+            // Update shipping display
+            const shippingElement = document.querySelector('.d-flex.justify-content-between.mb-2:nth-child(3) span:nth-child(2)');
+            if (shippingType === 'regular') {
+                shippingElement.innerHTML = '<span class="text-success">Gratis</span>';
+            } else {
+                shippingElement.innerHTML = `Rp ${shippingCost.toLocaleString()}`;
+            }
+
+            // Update total
+            const totalElement = document.querySelector('.d-flex.justify-content-between.fw-bold span:nth-child(2)');
+            totalElement.textContent = `Rp ${total.toLocaleString()}`;
+
+            // Update submit button
+            const submitBtn = document.getElementById('submitBtn');
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            if (paymentMethod) {
+                if (paymentMethod.value === 'cod') {
+                    submitBtn.innerHTML = `<i class="bi bi-cash-coin me-2"></i>Buat Pesanan COD - Rp ${total.toLocaleString()}`;
+                } else if (paymentMethod.value === 'midtrans') {
+                    submitBtn.innerHTML = `<i class="bi bi-credit-card me-2"></i>Bayar Sekarang - Rp ${total.toLocaleString()}`;
+                }
+            }
+
+            // Store current total for later use
+            window.currentTotal = total;
+        }
 
         // Check if Snap.js is loaded
         window.addEventListener('load', function() {
@@ -483,6 +818,21 @@
                 }
             }
 
+            // Check shipping method selection
+            const shippingMethod = document.querySelector('input[name="shippingMethod"]:checked');
+            if (!shippingMethod) {
+                alert('Silakan pilih metode pengiriman');
+                isValid = false;
+            } else if (shippingMethod.value === 'instant') {
+                const instantCourier = document.querySelector('input[name="instantCourier"]:checked');
+                if (!instantCourier) {
+                    alert('Silakan pilih kurir instan');
+                    isValid = false;
+                } else {
+                    console.log('Selected instant courier:', instantCourier.value);
+                }
+            }
+
             if (isValid) {
                 const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
 
@@ -501,6 +851,25 @@
             element.addEventListener('input', function() {
                 this.classList.remove('is-invalid');
             });
+        });
+
+        // Reload instant couriers when address changes
+        document.getElementById('postalCode').addEventListener('change', function() {
+            const instantSelected = document.querySelector('input[name="shippingMethod"]:checked');
+            if (instantSelected && instantSelected.value === 'instant') {
+                loadInstantCouriers();
+            }
+        });
+
+        document.getElementById('address').addEventListener('input', function() {
+            const instantSelected = document.querySelector('input[name="shippingMethod"]:checked');
+            if (instantSelected && instantSelected.value === 'instant') {
+                // Debounce the API call
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = setTimeout(() => {
+                    loadInstantCouriers();
+                }, 1000);
+            }
         });
 
         // Get enabled payments based on selected method
@@ -566,6 +935,20 @@
             formData.append('postalCode', document.getElementById('postalCode').value);
             formData.append('orderNotes', document.getElementById('orderNotes').value);
             formData.append('paymentMethod', 'cod');
+
+            // Add shipping method
+            const shippingMethod = document.querySelector('input[name="shippingMethod"]:checked');
+            if (shippingMethod) {
+                formData.append('shippingMethod', shippingMethod.value);
+                if (shippingMethod.value === 'instant') {
+                    const instantCourier = document.querySelector('input[name="instantCourier"]:checked');
+                    if (instantCourier) {
+                        formData.append('instantCourier', instantCourier.getAttribute('data-courier'));
+                        formData.append('shippingCost', instantCourier.getAttribute('data-price'));
+                    }
+                }
+            }
+
             formData.append('_token', '{{ csrf_token() }}');
 
             // Send to server (you'll need to create this route)
@@ -607,7 +990,7 @@
             const transactionData = {
                 transaction_details: {
                     order_id: 'SIGMA-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-                    gross_amount: 315000
+                    gross_amount: window.currentTotal || 315000
                 },
                 customer_details: {
                     first_name: document.getElementById('firstName').value,
@@ -620,19 +1003,34 @@
                         id: 'ETAWALIN-001',
                         price: 185000,
                         quantity: 1,
-                        name: 'Etawalin Premium'
+                        name: 'Etawalin Premium Box 200gr'
                     },
                     {
                         id: 'VITAMIN-001',
                         price: 165000,
                         quantity: 1,
-                        name: 'Vitamin Complete'
+                        name: 'Vitamin Complete Botol 250ml'
                     }
                 ],
                 finish_redirect_url: '{{ url("/midtrans/finish") }}',
                 unfinish_redirect_url: '{{ url("/midtrans/unfinish") }}',
                 error_redirect_url: '{{ url("/midtrans/error") }}'
             };
+
+            // Add shipping method
+            const shippingMethod = document.querySelector('input[name="shippingMethod"]:checked');
+            if (shippingMethod) {
+                transactionData.shipping_method = shippingMethod.value;
+                if (shippingMethod.value === 'instant') {
+                    const instantCourier = document.querySelector('input[name="instantCourier"]:checked');
+                    if (instantCourier) {
+                        transactionData.instant_courier = JSON.parse(instantCourier.getAttribute('data-courier'));
+                        transactionData.shipping_cost = parseInt(instantCourier.getAttribute('data-price'));
+                        // Update gross amount with shipping cost
+                        transactionData.transaction_details.gross_amount += transactionData.shipping_cost;
+                    }
+                }
+            }
 
             // Jika ada metode yang dipilih, kirim hanya metode tersebut
             // Kecuali QRIS - biarkan semua metode muncul agar user bisa pilih
