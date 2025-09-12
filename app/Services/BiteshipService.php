@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class BiteshipService
 {
@@ -23,6 +24,22 @@ class BiteshipService
      */
     public function getInstantRates($origin, $destination, $couriers = 'grab,gojek', $items = [])
     {
+        // Create comprehensive cache key based on ALL location parameters
+        $cacheKey = 'biteship_rates_' .
+            'origin_lat_' . $origin['latitude'] . '_' .
+            'origin_lng_' . $origin['longitude'] . '_' .
+            'dest_lat_' . $destination['latitude'] . '_' .
+            'dest_lng_' . $destination['longitude'] . '_' .
+            'couriers_' . md5($couriers) . '_' .
+            'items_' . md5(json_encode($items));
+
+        // Check cache first (5 minutes TTL)
+        $cachedData = Cache::get($cacheKey);
+        if ($cachedData) {
+            Log::info('Returning cached Biteship rates data', ['cache_key' => $cacheKey]);
+            return $cachedData;
+        }
+
         // Use the parameters passed from controller
         $payload = [
             'origin_latitude' => $origin['latitude'],
@@ -54,6 +71,11 @@ class BiteshipService
             if ($response->successful()) {
                 $data = $response->json();
                 Log::info('SUCCESS - Real API Data:', ['data' => $data]);
+
+                // Cache the successful response for 5 minutes
+                Cache::put($cacheKey, $data, 300); // 300 seconds = 5 minutes
+                Log::info('Cached Biteship rates data', ['cache_key' => $cacheKey, 'ttl' => 300]);
+
                 return $data;
             } else {
                 Log::warning('Request failed:', ['status' => $response->status(), 'body' => $response->body()]);
@@ -65,7 +87,14 @@ class BiteshipService
         // If POST fails, try curl as fallback
         try {
             Log::info('Trying curl POST as fallback');
-            return $this->getRatesWithCurlPost($payload);
+            $data = $this->getRatesWithCurlPost($payload);
+
+            if ($data && isset($data['success']) && $data['success']) {
+                // Cache the successful response for 5 minutes
+                Cache::put($cacheKey, $data, 300);
+                Log::info('Cached Biteship rates data from curl fallback', ['cache_key' => $cacheKey, 'ttl' => 300]);
+                return $data;
+            }
         } catch (\Exception $e) {
             Log::error('Curl also failed:', ['error' => $e->getMessage()]);
         }

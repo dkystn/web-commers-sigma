@@ -95,10 +95,76 @@ class BiteshipController extends Controller
 
             // Handle successful API response with pricing data
             if (isset($rates['pricing']) && is_array($rates['pricing'])) {
-                // Filter only instant services
+                // Filter for instant and same-day services - more inclusive filtering
                 $instantCouriers = array_filter($rates['pricing'], function($courier) {
                     $instantTypes = ['instant', 'instant_bike', 'instant_car', 'motorcycle', 'economy'];
-                    return isset($courier['type']) && in_array($courier['type'], $instantTypes);
+                    $serviceType = $courier['service_type'] ?? '';
+                    $type = $courier['type'] ?? '';
+                    $serviceName = strtolower($courier['courier_service_name'] ?? '');
+                    $company = strtolower($courier['company'] ?? '');
+
+                    // Priority 1: Check service_type "instant"
+                    if ($serviceType === 'instant') {
+                        return true;
+                    }
+
+                    // Priority 2: Check instant types (including motorcycle)
+                    if (in_array($type, $instantTypes)) {
+                        return true;
+                    }
+
+                    // Priority 3: Include same_day services with instant types
+                    if ($serviceType === 'same_day' && in_array($type, ['instant', 'instant_bike', 'instant_car', 'motorcycle'])) {
+                        return true;
+                    }
+
+                    // Priority 4: Include same_day services from major instant couriers
+                    if ($serviceType === 'same_day' && in_array($company, ['grab', 'gojek', 'borzo', 'lalamove', 'paxel', 'deliveree'])) {
+                        return true;
+                    }
+
+                    // Priority 5: Check service name for instant/same day keywords
+                    if (strpos($serviceName, 'instant') !== false ||
+                        strpos($serviceName, 'express') !== false ||
+                        strpos($serviceName, 'same day') !== false ||
+                        strpos($serviceName, 'sameday') !== false) {
+                        return true;
+                    }
+
+                    // Priority 6: Include economy services from instant couriers
+                    if ($serviceType === 'economy' && in_array($company, ['grab', 'gojek', 'borzo', 'lalamove', 'paxel'])) {
+                        return true;
+                    }
+
+                    // Exclude non-relevant services
+                    return false;
+                });
+
+                // Sort results: Priority Gojek & Grab first, then by price (cheapest first)
+                usort($instantCouriers, function($a, $b) {
+                    $companyA = strtolower($a['company'] ?? '');
+                    $companyB = strtolower($b['company'] ?? '');
+                    $priceA = $a['price'] ?? 0;
+                    $priceB = $b['price'] ?? 0;
+
+                    // Priority 1: Gojek and Grab always first
+                    $priorityCompanies = ['gojek', 'grab'];
+                    $isPriorityA = in_array($companyA, $priorityCompanies);
+                    $isPriorityB = in_array($companyB, $priorityCompanies);
+
+                    if ($isPriorityA && !$isPriorityB) {
+                        return -1; // A comes first
+                    } elseif (!$isPriorityA && $isPriorityB) {
+                        return 1; // B comes first
+                    }
+
+                    // Priority 2: Within same priority group or non-priority, sort by price (cheapest first)
+                    if ($priceA !== $priceB) {
+                        return $priceA <=> $priceB;
+                    }
+
+                    // If prices are equal, maintain original order
+                    return 0;
                 });
 
                 return response()->json([

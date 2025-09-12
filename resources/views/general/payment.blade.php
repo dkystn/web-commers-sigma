@@ -180,13 +180,11 @@
                                             <i class="bi bi-lightning-fill text-warning me-3 fs-4"></i>
                                             <div>
                                                 <div class="fw-bold">Pengantaran Instan</div>
-                                                <small class="text-muted">1-2 jam (Biteship)</small>
+                                                <small class="text-muted">Motor/Mobil - 1-3 jam</small>
                                             </div>
                                         </label>
                                     </div>
-                                </div>
-
-                                <!-- Instant Shipping Options (shown when instant is selected) -->
+                                </div>                                <!-- Instant Shipping Options (shown when instant is selected) -->
                                 <div id="instantOptions" class="mt-3" style="display: none;">
                                     <div class="border rounded p-3 bg-light">
                                         <h6 class="fw-bold mb-3">Pilih Kurir Instan:</h6>
@@ -439,20 +437,47 @@
 
         .shipping-sub-method {
             border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 8px;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
             transition: all 0.3s ease;
+            background: #fff;
         }
 
         .shipping-sub-method:hover {
-            border-color: var(--bs-primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-color: #0d6efd;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+            transform: translateY(-1px);
         }
 
         .shipping-sub-method .form-check-input:checked ~ .form-check-label {
-            color: var(--bs-primary);
-            font-weight: 500;
+            color: #0d6efd;
+        }
+
+        .shipping-sub-method .form-check-input:checked ~ .form-check-label .fw-bold {
+            color: #0d6efd;
+        }
+
+        .shipping-sub-method .form-check-label {
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .shipping-sub-method img {
+            transition: transform 0.2s ease;
+        }
+
+        .shipping-sub-method:hover img {
+            transform: scale(1.05);
+        }
+
+        .loading-icon {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
     </style>
 @endpush
@@ -546,11 +571,19 @@
             const instantCouriers = document.getElementById('instantCouriers');
             instantCouriers.innerHTML = `
                 <div class="col-12">
-                    <div class="text-center">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <div class="text-center py-4">
+                        <div class="spinner-border spinner-border-sm text-primary mb-2" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <small class="text-muted ms-2">Memuat kurir instan...</small>
+                        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                            <img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="loading-icon" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">
+                            <img src="/custom/img/delivery/car.svg" alt="Car" class="loading-icon" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(25%) sepia(100%) saturate(3290%) hue-rotate(211deg) brightness(100%) contrast(102%);">
+                            <img src="/custom/img/delivery/van.svg" alt="Van" class="loading-icon" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">
+                            <img src="/custom/img/delivery/truck.svg" alt="Truck" class="loading-icon" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">
+                            <img src="/custom/img/delivery/fuso.svg" alt="Fuso" class="loading-icon" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">
+                            <img src="/custom/img/delivery/tronton.svg" alt="Tronton" class="loading-icon" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">
+                        </div>
+                        <small class="text-muted">Memuat opsi kurir instan...</small>
                     </div>
                 </div>
             `;
@@ -662,19 +695,91 @@
                     serviceName = courier.courier_service_name;
                 }
 
+                // Determine icon and logo based on service type and courier
+                let iconHtml = '';
+                let logoHtml = '';
+
+                // Determine vehicle icon - More comprehensive logic
+                if (courier.type === 'instant_car' || courier.type === 'car') {
+                    // Car services
+                    iconHtml = '<img src="/custom/img/delivery/car.svg" alt="Car" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(25%) sepia(100%) saturate(3290%) hue-rotate(211deg) brightness(100%) contrast(102%);">';
+                } else if (courier.type === 'instant_bike' || courier.type === 'instant' || courier.type === 'motorcycle') {
+                    // Motorcycle/Bike services
+                    iconHtml = '<img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">';
+                } else if (courier.type === 'van' || courier.service_type === 'van') {
+                    // Van services
+                    iconHtml = '<img src="/custom/img/delivery/van.svg" alt="Van" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(25%) sepia(100%) saturate(3290%) hue-rotate(211deg) brightness(100%) contrast(102%);">';
+                } else if (courier.type === 'small_box' || courier.type === 'engkel_box' || courier.type === 'cdd_box' ||
+                          courier.type === 'engkel_pickup' || courier.type === 'cdd_pickup') {
+                    // Small truck/box services
+                    iconHtml = '<img src="/custom/img/delivery/doble-engkel.svg" alt="Small Truck" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">';
+                } else if (courier.type === 'fuso_light' || courier.type === 'fuso_heavy') {
+                    // Fuso truck services
+                    iconHtml = '<img src="/custom/img/delivery/fuso.svg" alt="Fuso Truck" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">';
+                } else if (courier.type === 'tronton_wing_box' || courier.type === 'tronton_box') {
+                    // Large tronton truck services
+                    iconHtml = '<img src="/custom/img/delivery/tronton.svg" alt="Tronton Truck" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">';
+                } else if (courier.service_type === 'economy' || courier.type === 'economy') {
+                    // Economy services - check service name for vehicle type
+                    if (courier.courier_service_name && courier.courier_service_name.toLowerCase().includes('van')) {
+                        iconHtml = '<img src="/custom/img/delivery/van.svg" alt="Van" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(25%) sepia(100%) saturate(3290%) hue-rotate(211deg) brightness(100%) contrast(102%);">';
+                    } else if (courier.courier_service_name && courier.courier_service_name.toLowerCase().includes('truck')) {
+                        iconHtml = '<img src="/custom/img/delivery/truck.svg" alt="Truck" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">';
+                    } else {
+                        iconHtml = '<img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">';
+                    }
+                } else if (courier.service_type === 'same_day') {
+                    // Same day services - determine by company or service name
+                    if (courier.company === 'grab' || courier.company === 'gojek' || courier.company === 'borzo') {
+                        iconHtml = '<img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">';
+                    } else if (courier.company === 'lalamove') {
+                        iconHtml = '<img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">';
+                    } else if (courier.company === 'deliveree') {
+                        iconHtml = '<img src="/custom/img/delivery/truck.svg" alt="Truck" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(33%) sepia(9%) saturate(1239%) hue-rotate(153deg) brightness(91%) contrast(89%);">';
+                    } else {
+                        iconHtml = '<img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">';
+                    }
+                } else {
+                    // Default fallback
+                    iconHtml = '<img src="/custom/img/delivery/motorcycle.svg" alt="Motorcycle" class="me-2" style="width: 40px; height: 40px; filter: brightness(0) saturate(100%) invert(59%) sepia(74%) saturate(380%) hue-rotate(3deg) brightness(101%) contrast(101%);">';
+                }
+
+                // Determine courier logo
+                if (courier.company === 'gojek' || courierName.toLowerCase().includes('gojek')) {
+                    logoHtml = '<img src="/custom/img/delivery/gojek.svg" alt="Gojek" class="ms-1" style="width: 55px; height: 35px; object-fit: contain;">';
+                } else if (courier.company === 'grab' || courierName.toLowerCase().includes('grab')) {
+                    logoHtml = '<img src="/custom/img/delivery/grab.svg" alt="Grab" class="ms-1" style="width: 55px; height: 35px; object-fit: contain;">';
+                } else if (courier.company === 'paxel' || courierName.toLowerCase().includes('paxel')) {
+                    logoHtml = '<img src="/custom/img/delivery/paxel.svg" alt="Paxel" class="ms-1" style="width: 55px; height: 35px; object-fit: contain;">';
+                } else if (courier.company === 'deliveree' || courierName.toLowerCase().includes('deliveree')) {
+                    logoHtml = '<img src="/custom/img/delivery/deliveree.svg" alt="Deliveree" class="ms-1" style="width: 65px; height: 35px; object-fit: contain;">';
+                } else if (courier.company === 'borzo' || courierName.toLowerCase().includes('borzo')) {
+                    logoHtml = '<img src="/custom/img/delivery/borzo.svg" alt="Borzo" class="ms-1" style="width: 55px; height: 35px; object-fit: contain;">';
+                } else if (courier.company === 'lalamove' || courierName.toLowerCase().includes('lalamove')) {
+                    logoHtml = '<img src="/custom/img/delivery/lalamove.svg" alt="Lalamove" class="ms-1" style="width: 65px; height: 35px; object-fit: contain;">';
+                } else {
+                    // Default logo placeholder
+                    logoHtml = '<div class="ms-1 d-flex align-items-center justify-content-center" style="width: 55px; height: 35px; background-color: #f8f9fa; border-radius: 4px; font-size: 10px; font-weight: bold; color: #6c757d;">' + courierName.charAt(0) + '</div>';
+                }
+
                 if (price > 0) {
                     html += `
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-6 mb-3">
                             <div class="form-check shipping-sub-method">
                                 <input class="form-check-input" type="radio" name="instantCourier" id="${courierId}" value="${courierId}" data-price="${price}" data-courier="${JSON.stringify(courier).replace(/"/g, '&quot;')}">
                                 <label class="form-check-label d-flex align-items-center" for="${courierId}">
-                                    <i class="bi bi-truck text-warning me-3 fs-4"></i>
+                                    <div class="d-flex align-items-center me-3">
+                                        ${iconHtml}
+                                    </div>
                                     <div class="flex-grow-1">
-                                        <div class="fw-bold">${courierName} ${serviceName}</div>
-                                        <small class="text-muted">${duration}</small>
+                                        <div class="fw-bold text-dark">
+                                            <!--  ${courierName} -->
+                                            ${logoHtml}
+                                        </div>
+                                        <small class="text-muted">${serviceName} • ${duration}</small>
                                     </div>
                                     <div class="text-end">
-                                        <div class="fw-bold text-primary">Rp ${price.toLocaleString()}</div>
+                                        <div class="fw-bold text-primary fs-6">Rp ${price.toLocaleString()}</div>
                                     </div>
                                 </label>
                             </div>
