@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MidtransController;
 
@@ -29,4 +30,6 @@ Route::get('/midtrans/finish', [MidtransController::class, 'finish']);
 Route::get('/midtrans/unfinish', [MidtransController::class, 'unfinish']);
 Route::get('/midtrans/error', [MidtransController::class, 'error']);
 
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
