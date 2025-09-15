@@ -5,17 +5,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-    <meta name="author" content="AdminKit">
+    <meta name="description" content="Ecommerce platform for selling health goat milk products like Etawalin, Etawaku, and more from Ethos">
+    <meta name="author" content="Sigma Digital Nusantara">
     <meta name="keywords"
-        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+        content="ecommerce, penjualan susu kesehatan kambing, goat milk health, Etawalin, Etawaku, susu kambing online, produk susu kambing Ethos">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="{{ asset('template/static/img/icons/icon-48x48.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('template/static/img/logo/logo-sigma.png') }}" />
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
-    <title>E Commerce - Sigma</title>
+    <title>Ecommerce Penjualan Susu Kambing - Sigma</title>
 
     <link href="{{ asset('template/static/css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">

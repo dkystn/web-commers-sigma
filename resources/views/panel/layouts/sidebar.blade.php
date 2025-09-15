@@ -8,9 +8,6 @@
             </a>
 
             <ul class="sidebar-nav">
-                <li class="sidebar-header">
-                    Pages
-                </li>
 
                 <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('dashboard') }}">
@@ -18,9 +15,13 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="pages-profile.html">
-                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                <li class="sidebar-header">
+                    Database
+                </li>
+
+                <li class="sidebar-item {{ request()->routeIs('panel.product') ? 'active' : '' }}">
+                    <a class="sidebar-link" href="{{ route('panel.product') }}">
+                        <i class="align-middle" data-feather="box"></i> <span class="align-middle">Product</span>
                     </a>
                 </li>
 

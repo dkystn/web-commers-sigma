@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Yajra\DataTables\DataTables;
 
 class DataCenterController extends Controller
 {
@@ -51,4 +53,78 @@ class DataCenterController extends Controller
         \Illuminate\Support\Facades\Cache::forget('data_center_notifications');
         return response()->json(['status' => 'cleared']);
     }
+
+    public function product()
+    {
+        return view('panel.pages.product');
+    }
+
+    public function getProduct(Request $request)
+    {
+        $baseUrl    = env('DATA_CENTER_API_URL') . '/api/products/search?include=category,hppValues,channelPricings,productChannels,bundleItems,bundles,orderItems';
+        $token      = env('DATA_CENTER_TOKEN');
+
+        if ($request->has('draw')) {
+
+            $limit  = $request->input('length', 10);
+            $start  = $request->input('start', 0);
+            $page   = floor($start / $limit) + 1;
+            $search = $request->input('search.value', '');
+
+            $url = $baseUrl . '&limit=' . $limit . '&page=' . $page;
+            if (!empty($search)) {
+                $url .= '&name=' . urlencode($search);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->get($url);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $products = collect($data['data'] ?? []);
+
+                $formattedData = $products->map(function($row) {
+                    return [
+                        'id' => $row['id'],
+                        'sku' => $row['sku'],
+                        'name' => $row['name'],
+                        'price' => $row['price'],
+                        'category_name' => $row['category']['name'] ?? 'N/A',
+                        'status' => $row['is_active'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>',
+                    ];
+                })->toArray();
+
+                return response()->json([
+                    'draw' => intval($request->input('draw')),
+                    'recordsTotal' => $data['total'] ?? count($formattedData),
+                    'recordsFiltered' => $data['total'] ?? count($formattedData),
+                    'data' => $formattedData
+                ]);
+            } else {
+                return response()->json(['error' => 'Failed to fetch data'], $response->status());
+            }
+        } else {
+            $url = $baseUrl . '&limit=10&page=1';
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->get($url);
+
+            if ($response->successful()) {
+                $data = $response->json()['data'];
+                return DataTables::of(collect($data))
+                    ->addColumn('category_name', function($row) {
+                        return $row['category']['name'] ?? 'N/A';
+                    })
+                    ->addColumn('status', function($row) {
+                        return $row['is_active'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
+                    })
+                    ->rawColumns(['status'])
+                    ->make(true);
+            } else {
+                return response()->json(['error' => 'Failed to fetch data'], $response->status());
+            }
+        }
+    }
+
 }
