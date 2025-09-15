@@ -102,6 +102,24 @@
 
     <!-- Main Content -->
     <main>
+        {{-- Tampilkan notifikasi dari data center sebagai toast floating --}}
+        @if(\Illuminate\Support\Facades\Cache::has('data_center_notifications'))
+            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+                @foreach(\Illuminate\Support\Facades\Cache::get('data_center_notifications') as $index => $notif)
+                    <div class="toast show" role="alert" style="margin-bottom: 10px;">
+                        <div class="toast-header">
+                            <strong class="me-auto text-primary">{{ $notif['event'] }}</strong>
+                            <small class="text-muted">{{ \Carbon\Carbon::parse($notif['received_at'])->diffForHumans() }}</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            {{ $notif['message'] }}
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
         @yield('content')
     </main>
 
@@ -185,5 +203,28 @@
             data-client-key="{{ env('MIDTRANS_CLIENT_KEY', 'SB-Mid-client-ydoeRccRG1sKnOeu') }}"></script>
 
     @stack('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle toast dismiss to clear notifications cache
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            toastElList.forEach(function(toastEl) {
+                toastEl.addEventListener('hidden.bs.toast', function() {
+                    // Call endpoint to clear notifications
+                    fetch('/api/notifications/clear', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(response => response.json()).then(data => {
+                        console.log('Notifications cleared:', data);
+                    }).catch(error => {
+                        console.error('Error clearing notifications:', error);
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>

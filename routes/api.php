@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BiteshipController;
+use App\Http\Controllers\DataCenterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,7 @@ Route::prefix('biteship')->group(function () {
     Route::get('/couriers', [BiteshipController::class, 'getCouriers']);
     Route::get('/test', [BiteshipController::class, 'testConnection']);
 });
+
+// Notification Routes
+Route::post('/webhook/notifications', [DataCenterController::class, 'notification']);
+Route::post('/notifications/clear', [DataCenterController::class, 'clearNotifications']);
