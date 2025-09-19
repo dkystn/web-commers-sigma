@@ -39,4 +39,5 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post
 
 Route::get('/panel-product', [DataCenterController::class, 'product'])->name('panel.product');
 Route::get('/panel-get-product', [DataCenterController::class, 'getProduct'])->name('panel.get.product');
+Route::get('/panel-get-product-detail/{id}', [DataCenterController::class, 'getProductDetail'])->name('panel.get.product.detail');
 

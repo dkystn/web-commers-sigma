@@ -14,7 +14,8 @@
     <link rel="shortcut icon" href="{{ asset('template/static/img/logo/logo-sigma.png') }}" />
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
-    <title>Ecommerce Penjualan Susu Kambing - Sigma</title>
+
+    <title>E Commerce - Sigma</title>
 
     <link href="{{ asset('template/static/css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">

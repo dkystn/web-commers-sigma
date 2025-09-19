@@ -84,8 +84,9 @@ class DataCenterController extends Controller
                 $data = $response->json();
                 $products = collect($data['data'] ?? []);
 
-                $formattedData = $products->map(function($row) {
+                $formattedData = $products->map(function ($row) {
                     return [
+                        'action' => '<button class="btn btn-sm btn-outline-primary detail-btn" data-id="' . $row['id'] . '"><i class="align-middle me-1" data-feather="eye"></i>Detail</button>',
                         'id' => $row['id'],
                         'sku' => $row['sku'],
                         'name' => $row['name'],
@@ -113,13 +114,16 @@ class DataCenterController extends Controller
             if ($response->successful()) {
                 $data = $response->json()['data'];
                 return DataTables::of(collect($data))
-                    ->addColumn('category_name', function($row) {
+                    ->addColumn('action', function ($row) {
+                        return '<button class="btn btn-sm btn-outline-primary detail-btn" data-id="' . $row['id'] . '"><i class="align-middle me-1" data-feather="eye"></i>Detail</button>';
+                    })
+                    ->addColumn('category_name', function ($row) {
                         return $row['category']['name'] ?? 'N/A';
                     })
-                    ->addColumn('status', function($row) {
+                    ->addColumn('status', function ($row) {
                         return $row['is_active'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
                     })
-                    ->rawColumns(['status'])
+                    ->rawColumns(['action', 'status'])
                     ->make(true);
             } else {
                 return response()->json(['error' => 'Failed to fetch data'], $response->status());
@@ -127,4 +131,19 @@ class DataCenterController extends Controller
         }
     }
 
+    public function getProductDetail($id)
+    {
+        $url = env('DATA_CENTER_API_URL') . '/api/products/' . $id . '?include=category,hppValues,channelPricings,productChannels,bundleItems,bundles';
+        $token = env('DATA_CENTER_TOKEN');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get($url);
+
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return response()->json(['error' => 'Failed to fetch product detail'], $response->status());
+        }
+    }
 }
